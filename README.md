@@ -51,3 +51,13 @@ ssh-keygen -t rsa -b 4096 -C "johndoe@example.com" -f ~/.ssh/vagrant-k3s-cluster
    ```bash
    ssh -i ~/.ssh/vagrant-k3s-cluster-sample vagrant@192.168.33.12
    ```
+
+### Step 3: Configure the Inventory File
+
+1. Navigate to the [`ansible`](./ansible/) directory, then generate the inventory file using the following command, provideing the node IP addresses:
+
+   ```bash
+   ./inventorygen.py 192.168.33.11 192.168.33.12 192.168.33.13
+   ```
+
+2. The inventory file will be created under the path [`inventory`](./ansible/inventory/). Modify it as needed to suit your specific configuration.
