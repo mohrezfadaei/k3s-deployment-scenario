@@ -1,0 +1,11 @@
+---
+- name: Prepare K3s environment
+  hosts: all
+  become: yes
+  tasks:
+    - name: Load configuration variables
+      ansible.builtin.include_vars:
+        file: '../config_vars/all.yml'
+    - name: Include the prepare role
+      include_role:
+        name: prepare

@@ -1,6 +1,11 @@
 ---
 # Global configuration variables
 
+# Reboot wait settings
+reboot_delay: 10 # Delay before retrying connection (seconds)
+reboot_timeout: 300 # Maximum time to wait for connection (seconds)
+reboot_connect_timeout: 10 # Timeout for each connection attempt (seconds)
+
 # Additional global variables
 ansible_user: vagrant
 ansible_ssh_private_key_file: ~/.ssh/vagrant-k3s-cluster-sample

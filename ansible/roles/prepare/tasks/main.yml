@@ -1,0 +1,73 @@
+---
+- name: Update package index
+  ansible.builtin.apt:
+    update_cache: yes
+  become: yes
+  tags:
+    - prepare
+    - update
+    - system
+
+- name: Install required dependencies
+  ansible.builtin.package:
+    name:
+      - curl
+    state: present
+  become: yes
+  tags:
+    - prepare
+    - install
+    - system
+
+- name: Open required firewall ports
+  ansible.builtin.ufw:
+    rule: allow
+    port:
+      - 6443
+      - 2379:2380
+      - 10250:10252
+      - 8472
+      - 30000:32767
+    proto: tcp
+    state: enabled
+  when: ansible_os_family == "Debian"
+  become: yes
+  tags:
+    - firewall
+    - network
+
+- name: Open UDP port for VXLAN (flannel networking)
+  ansible.builtin.ufw:
+    rule: allow
+    port: 8472
+    proto: udp
+    state: enabled
+  when: ansible_os_family == "Debian"
+  become: yes
+  tags:
+    - prepare
+    - firewall
+    - network
+
+- name: Reboot if necessary
+  ansible.builtin.reboot:
+    msg: 'Rebooting to apply changes'
+    test_command: uptime
+  when: ansible_facts['os_family'] == "Debian" and ansible_pkg_mgr == "apt"
+  become: yes
+  tags:
+    - prepare
+    - reboot
+    - system
+
+- name: Wait for system to come back online after reboot
+  ansible.builtin.wait_for_connection:
+    delay: '{{ reboot_delay }}'
+    timeout: '{{ reboot_timeout }}'
+    connect_timeout: '{{ reboot_connect_timeout }}'
+  when: ansible_facts['os_family'] == "Debian" and ansible_pkg_mgr == "apt"
+  become: yes
+  tags:
+    - prepare
+    - reboot
+    - system
