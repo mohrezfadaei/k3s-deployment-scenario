@@ -1,0 +1,17 @@
+all:
+  children:
+    nodes:
+      hosts:
+        node1:
+          ansible_host: 192.168.33.11
+        node2:
+          ansible_host: 192.168.33.12
+        node3:
+          ansible_host: 192.168.33.13
+    masters:
+      hosts:
+        node1: {}
+    workers:
+      hosts:
+        node2: {}
+        node3: {}
